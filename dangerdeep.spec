@@ -4,24 +4,26 @@
 %define title           Danger from the deep
 %define longtitle       WW2 german submarine simulation
 
-Name:           %{name}
-Version:        %{version}
-Release:        %{release}
-Summary:        WW2 german submarine simulation
-License:        GPL
-Group:          Games/Other
-URL:            http://dangerdeep.sourceforge.net/
-Source0:        http://prdownloads.sourceforge.net/dangerdeep/%{name}-%{version}.tar.bz2
-Buildrequires:  scons
-Buildrequires:  fftw-devel
-Buildrequires:  SDL-devel
-Buildrequires:  SDL_net-devel
-Buildrequires:  SDL_image-devel
-Buildrequires:  SDL_mixer-devel
-Buildrequires:  mesaglu-devel
-Buildrequires:  ImageMagick
-Requires:       dangerdeep-data
-BuildRoot:      %_tmppath/%{name}-%{version}
+Summary:	WW2 german submarine simulation
+Name:		dangerdeep
+Version:	0.3.0
+Release:	%mkrel 1
+License:	GPL
+Group:		Games/Other
+URL:		http://dangerdeep.sourceforge.net/
+Source0:	http://prdownloads.sourceforge.net/dangerdeep/%{name}-%{version}.tar.bz2
+Patch0:		%{name}-0.3.0-scons.patch
+Buildrequires:	scons
+Buildrequires:	fftw-devel
+Buildrequires:	SDL-devel
+Buildrequires:	SDL_net-devel
+Buildrequires:	SDL_image-devel
+Buildrequires:	SDL_mixer-devel
+Buildrequires:	libmesagl-devel
+Buildrequires:	libmesaglu-devel
+Buildrequires:	ImageMagick
+Requires:	dangerdeep-data
+BuildRoot:      %{tmppath}/%{name}-%{version}-buildroot
 
 %description
 Danger from the deep (aka dangerdeep) is a Free / Open Source World War II
@@ -33,22 +35,40 @@ knowledge of physics allows. It's current state is ALPHA, but it is playable.
 
 %prep
 %setup -q
+%patch0 -p1
+
 perl -pi \
-    -e 's|/usr/local/bin|%_gamesbindir|;' \
-    -e 's|/usr/local/share/dangerdeep|%_gamesdatadir/dangerdeep|;' \
+    -e 's|/usr/local/bin|%{_gamesbindir}|;' \
+    -e 's|/usr/local/share/dangerdeep|%{_gamesdatadir}/dangerdeep|;' \
     SConstruct
 
 %build
-scons -k
+
+# (tpg) parallel build
+procs=`egrep -c ^cpu[0-9]+ /proc/stat ||:`
+if [ "$procs" ="0"]; then
+	procs=1
+fi
+
+scons -k -j$procs \
+    installbindir=%{buildroot}%{_gamesbindir} \
+    installdatadir=%{buildroot}%{_gamesdatadir} \
+    datadir=%{buildroot}%{_datadir}/%{name} \
+    usex86sse=1 \
+    ccflags="%{optflags}" 
+    
+
 for i in 16 32 48; do
     convert -size ${i}x$i logo.xpm -resize ${i}x$i %{name}-${i}x$i.png
 done
 
 %install
 rm -rf %{buildroot}
-
-install -d -m 755 %{buildroot}%{_gamesbindir}
-install -m 755 build/linux/%{name} %{buildroot}%{_gamesbindir}
+scons \
+    installbindir=%{buildroot}%{_gamesbindir} \
+    installdatadir=%{buildroot}%{_gamesdatadir} \
+    datadir=%{buildroot}%{_datadir}/%{name} \
+    install
 
 install -d -m 755 %{buildroot}%{_mandir}/man6
 install -m 644 doc/man/dangerdeep.6 %{buildroot}%{_mandir}/man6
@@ -87,11 +107,9 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 %doc ChangeLog CREDITS README INSTALL LICENSE
-%{_gamesbindir}/*
+%{_gamesbindir}/%{name}
 %{_mandir}/man6/*
 %{_datadir}/applications/mandriva-%{name}.desktop
 %{_miconsdir}/*
 %{_iconsdir}/*.*
 %{_liconsdir}/*
-
-
