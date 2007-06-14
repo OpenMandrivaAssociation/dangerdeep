@@ -50,13 +50,11 @@ if [ "$procs" ="0"]; then
 	procs=1
 fi
 
-scons -k -j$procs \
+scons \
     installbindir=%{buildroot}%{_gamesbindir} \
     installdatadir=%{buildroot}%{_gamesdatadir} \
     datadir=%{buildroot}%{_datadir}/%{name} \
-    usex86sse=1 \
-    ccflags="%{optflags}" 
-    
+    usex86sse=1    
 
 for i in 16 32 48; do
     convert -size ${i}x$i logo.xpm -resize ${i}x$i %{name}-${i}x$i.png
