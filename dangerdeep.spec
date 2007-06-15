@@ -1,13 +1,10 @@
-%define name            dangerdeep
-%define version         0.2.0
-%define release         %mkrel 1
 %define title           Danger from the deep
 %define longtitle       WW2 german submarine simulation
 
-Summary:	WW2 german submarine simulation
 Name:		dangerdeep
 Version:	0.3.0
-Release:	%mkrel 1
+Release:	%mkrel 2
+Summary:	WW2 german submarine simulation
 License:	GPL
 Group:		Games/Other
 URL:		http://dangerdeep.sourceforge.net/
@@ -22,8 +19,8 @@ Buildrequires:	SDL_mixer-devel
 Buildrequires:	libmesagl-devel
 Buildrequires:	libmesaglu-devel
 Buildrequires:	ImageMagick
-Requires:	dangerdeep-data
-BuildRoot:      %{tmppath}/%{name}-%{version}-buildroot
+Requires:	    dangerdeep-data
+BuildRoot:      %{tmppath}/%{name}-%{version}
 
 %description
 Danger from the deep (aka dangerdeep) is a Free / Open Source World War II
@@ -37,13 +34,7 @@ knowledge of physics allows. It's current state is ALPHA, but it is playable.
 %setup -q
 %patch0 -p1
 
-perl -pi \
-    -e 's|/usr/local/bin|%{_gamesbindir}|;' \
-    -e 's|/usr/local/share/dangerdeep|%{_gamesdatadir}/dangerdeep|;' \
-    SConstruct
-
 %build
-
 # (tpg) parallel build
 procs=`egrep -c ^cpu[0-9]+ /proc/stat ||:`
 if [ "$procs" ="0"]; then
@@ -53,7 +44,7 @@ fi
 scons \
     installbindir=%{buildroot}%{_gamesbindir} \
     installdatadir=%{buildroot}%{_gamesdatadir} \
-    datadir=%{buildroot}%{_datadir}/%{name} \
+    datadir=%{_gamesdatadir}/%{name} \
     usex86sse=1    
 
 for i in 16 32 48; do
@@ -65,7 +56,7 @@ rm -rf %{buildroot}
 scons \
     installbindir=%{buildroot}%{_gamesbindir} \
     installdatadir=%{buildroot}%{_gamesdatadir} \
-    datadir=%{buildroot}%{_datadir}/%{name} \
+    datadir=%{_gamesdatadir}/%{name} \
     install
 
 install -d -m 755 %{buildroot}%{_mandir}/man6
