@@ -3,7 +3,7 @@
 
 Name:		dangerdeep
 Version:	0.3.0
-Release:	%mkrel 2
+Release:	%mkrel 3
 Summary:	WW2 german submarine simulation
 License:	GPL
 Group:		Games/Other
@@ -41,7 +41,7 @@ if [ "$procs" ="0"]; then
 	procs=1
 fi
 
-scons \
+scons -j$procs \
     installbindir=%{buildroot}%{_gamesbindir} \
     installdatadir=%{buildroot}%{_gamesdatadir} \
     datadir=%{_gamesdatadir}/%{name} \
