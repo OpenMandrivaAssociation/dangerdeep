@@ -20,6 +20,7 @@ Buildrequires:	libmesagl-devel
 Buildrequires:	libmesaglu-devel
 Buildrequires:	ImageMagick
 Requires:	    dangerdeep-data
+BuildRoot:      %{tmppath}/%{name}-%{version}
 
 %description
 Danger from the deep (aka dangerdeep) is a Free / Open Source World War II
