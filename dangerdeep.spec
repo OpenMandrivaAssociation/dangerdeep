@@ -83,11 +83,15 @@ install -m 644 %{name}-16x16.png %{buildroot}/%{_miconsdir}/%{name}.png
 install -m 644 %{name}-32x32.png %{buildroot}/%{_iconsdir}/%{name}.png
 install -m 644 %{name}-48x48.png %{buildroot}/%{_liconsdir}/%{name}.png
  
+%if %mdkversion < 200900
 %post
 %{update_menus}
+%endif
 
+%if %mdkversion < 200900
 %postun
 %{clean_menus}
+%endif
 
 %clean
 rm -rf %{buildroot}
