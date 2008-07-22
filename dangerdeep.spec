@@ -3,7 +3,7 @@
 
 Name:		dangerdeep
 Version:	0.3.0
-Release:	%mkrel 3
+Release:	%mkrel 5
 Summary:	WW2 german submarine simulation
 License:	GPL
 Group:		Games/Other
