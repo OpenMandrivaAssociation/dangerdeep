@@ -18,7 +18,7 @@ Buildrequires:	SDL_image-devel
 Buildrequires:	SDL_mixer-devel
 Buildrequires:	libmesagl-devel
 Buildrequires:	libmesaglu-devel
-Buildrequires:	ImageMagick
+Buildrequires:	imagemagick
 Requires:	    dangerdeep-data
 BuildRoot:      %{tmppath}/%{name}-%{version}
 
