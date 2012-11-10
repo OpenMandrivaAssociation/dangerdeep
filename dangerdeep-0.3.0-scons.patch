@@ -1,0 +1,12 @@
+diff -Naur dangerdeep-0.3.0/SConstruct dangerdeep-0.3.0.tpg/SConstruct
+--- dangerdeep-0.3.0/SConstruct	2007-06-11 18:29:13.000000000 +0000
++++ dangerdeep-0.3.0.tpg/SConstruct	2007-06-14 13:02:22.000000000 +0000
+@@ -182,7 +182,7 @@
+ 	build_dir = 'linux'
+ 	# check for broken libGL, ignore undefined symbols then
+ 	if (os.system('grep glBindProgram /usr/include/GL/gl*.h > /dev/null') == 0):
+-		gllibdirs = ['/usr/X11R6/lib/', '/usr/lib/', '/usr/local/lib/']
++		gllibdirs = ['/usr/X11R6/lib/', '/usr/lib/', '/usr/lib64/']
+ 		gllibdir = ''
+ 		for i in gllibdirs:
+ 			if (os.system('test -f '+i+'libGL.so') == 0):
