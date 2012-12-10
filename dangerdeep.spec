@@ -3,36 +3,39 @@
 
 Name:		dangerdeep
 Version:	0.3.0
-Release:	%mkrel 5
+Release:	3
 Summary:	WW2 german submarine simulation
-License:	GPL
+License:	GPLv2
 Group:		Games/Other
 URL:		http://dangerdeep.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/dangerdeep/%{name}-%{version}.tar.bz2
+
 Patch0:		%{name}-0.3.0-scons.patch
-Buildrequires:	scons
-Buildrequires:	fftw-devel
-Buildrequires:	SDL-devel
-Buildrequires:	SDL_net-devel
-Buildrequires:	SDL_image-devel
-Buildrequires:	SDL_mixer-devel
-Buildrequires:	libmesagl-devel
-Buildrequires:	libmesaglu-devel
-Buildrequires:	imagemagick
-Requires:	    dangerdeep-data
-BuildRoot:      %{tmppath}/%{name}-%{version}
+Patch1:		dangerdeep-0.3.0-gcc4.7-patch
+BuildRequires:	scons
+BuildRequires:	pkgconfig(fftw3)
+BuildRequires:	pkgconfig(sdl)
+BuildRequires:	pkgconfig(SDL_net)
+BuildRequires:	pkgconfig(SDL_image)
+BuildRequires:	pkgconfig(SDL_mixer)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(glu)
+BuildRequires:	imagemagick
+Requires:	    dangerdeep-data 
+
 
 %description
 Danger from the deep (aka dangerdeep) is a Free / Open Source World War II
-german submarine simulation. It is currently available for Linux/i386 and
+German submarine simulation. It is currently available for Linux/i386 and
 Windows, but since it uses SDL/OpenGL it should be portable to other operating
-systems or platforms. (If anyone whishes to port it, please contact us.) This
+systems or platforms. (If anyone wishes to port it, please contact us.) This
 game is planned as tactical simulation and will be as realistic as our time and
 knowledge of physics allows. It's current state is ALPHA, but it is playable.
 
 %prep
-%setup -q
+%setup -q 
 %patch0 -p1
+%patch1 -p1
 
 %build
 # (tpg) parallel build
@@ -52,7 +55,6 @@ for i in 16 32 48; do
 done
 
 %install
-rm -rf %{buildroot}
 scons \
     installbindir=%{buildroot}%{_gamesbindir} \
     installdatadir=%{buildroot}%{_gamesdatadir} \
@@ -83,21 +85,8 @@ install -m 644 %{name}-16x16.png %{buildroot}/%{_miconsdir}/%{name}.png
 install -m 644 %{name}-32x32.png %{buildroot}/%{_iconsdir}/%{name}.png
 install -m 644 %{name}-48x48.png %{buildroot}/%{_liconsdir}/%{name}.png
  
-%if %mdkversion < 200900
-%post
-%{update_menus}
-%endif
-
-%if %mdkversion < 200900
-%postun
-%{clean_menus}
-%endif
-
-%clean
-rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root)
 %doc ChangeLog CREDITS README INSTALL LICENSE
 %{_gamesbindir}/%{name}
 %{_mandir}/man6/*
@@ -105,3 +94,5 @@ rm -rf %{buildroot}
 %{_miconsdir}/*
 %{_iconsdir}/*.*
 %{_liconsdir}/*
+
+
