@@ -7,7 +7,7 @@ Release:	4
 Summary:	WW2 german submarine simulation
 License:	GPLv2
 Group:		Games/Other
-URL:		http://dangerdeep.sourceforge.net/
+URL:		https://dangerdeep.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/dangerdeep/%{name}-%{version}.tar.bz2
 
 Patch0:		%{name}-0.3.0-scons.patch
